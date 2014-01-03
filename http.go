@@ -30,17 +30,21 @@ type MockTestResponse struct {
 }
 
 // AssertBody ... Wrapper to provide an typing savings
-func (mtr *MockTestResponse) AssertBody(b string) {
+func (mtr *MockTestResponse) AssertBody(b string) bool {
   if mtr.String() != b {
-    mtr.T.Fatalf("Response body is %s asserted that it is %s", mtr.String(), b)
+    mtr.T.Errorf("Response body is %s asserted that it is %s", mtr.String(), b)
+    return false
   }
+  return true
 }
 
 // AssertCode ... Helper method to validate the right status code
-func (mtr *MockTestResponse) AssertCode(c int) {
+func (mtr *MockTestResponse) AssertCode(c int) bool {
   if mtr.StatusCode != c {
-    mtr.T.Fatalf("Response StatusCode is %d asserted that it is %d", mtr.StatusCode, c)
+    mtr.T.Errorf("Response StatusCode is %d asserted that it is %d", mtr.StatusCode, c)
+    return false
   }
+  return true
 }
 
 // AssertHeaders ... Helper method to validate the proper headers retuned

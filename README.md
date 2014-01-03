@@ -8,6 +8,7 @@ McTest is a Go (golang) web test library. Initally started as a gist and is slow
 ```go
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+  w.WriteHeader(200)
   fmt.Fprintf(w, "HomeHandler")
 }
 
@@ -15,8 +16,13 @@ func TestHome(t *testing.T) {
   req, _ := http.NewRequest("GET", "/path/to/handler", nil)
   resp := NewMockTestResponse(t)
   HomeHandler(resp, req)
-  resp.AssertBody("HomeHandler")
-  resp.AssertCode(200)
+  b := "HomeHandler"
+  if !resp.AssertCode(200) {
+    t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, 200)
+  }
+  if !resp.AssertBody(b) {
+    t.Fatalf("Response body is %s asserted that it is %s", resp.String(), b)
+  }
 }
 ```
 
