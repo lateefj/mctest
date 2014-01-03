@@ -6,7 +6,20 @@ import (
   "testing"
 )
 
+func TestInit(t *testing.T) {
+  req, _ := http.NewRequest("GET", "/path/to/handler", nil)
+  resp := NewMockTestResponse(t)
+  go func(w http.ResponseWriter, r *http.Request) {
+
+  }(resp, req)
+  resp.AssertCode(-1)
+  if len(resp.Bytes()) != 0 {
+    t.Fatalf("Expected response bytes to be 0 but they are %d", len(resp.Bytes()))
+  }
+
+}
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+  w.WriteHeader(200)
   fmt.Fprintf(w, "HomeHandler")
 }
 
@@ -20,6 +33,7 @@ func TestHome(t *testing.T) {
 
 // TODO: Write some more complex bytes
 func ByteHomeHandler(w http.ResponseWriter, r *http.Request) {
+  w.WriteHeader(200)
   w.Write([]byte("HomeHandler"))
 }
 func TestByteHome(t *testing.T) {

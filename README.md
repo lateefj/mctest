@@ -1,4 +1,4 @@
-mctest
+McTest
 ======
 
 McTest is a Go (golang) web test library. Initally started as a gist and is slowly getting used more for testing webservices written in Go.

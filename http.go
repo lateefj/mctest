@@ -57,5 +57,5 @@ func (mtr *MockTestResponse) AssertHeaders(t *testing.T, expectedHeaders map[str
 
 // NewMockTestResponse ... Create an instance of MockTestResponse
 func NewMockTestResponse(t *testing.T) *MockTestResponse {
-  return &MockTestResponse{MockResponse: MockResponse{Buffer: *bytes.NewBuffer(make([]byte, 0)), Head: http.Header{}, StatusCode: 200}, T: t}
+  return &MockTestResponse{MockResponse: MockResponse{Buffer: *bytes.NewBuffer(make([]byte, 0)), Head: http.Header{}, StatusCode: -1}, T: t}
 }
