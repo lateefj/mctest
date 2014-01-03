@@ -2,7 +2,6 @@ package mctest
 
 import (
   "bytes"
-  "fmt"
   "net/http"
   "testing"
 )
@@ -54,16 +53,4 @@ func (mtr *MockTestResponse) AssertHeaders(t *testing.T, expectedHeaders map[str
 
 func NewMockTestResponse(t *testing.T) *MockTestResponse {
   return &MockTestResponse{MockResponse: MockResponse{Buffer: *bytes.NewBufferString(""), Head: http.Header{}, StatusCode: 200}, T: t}
-}
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "HomeHandler")
-}
-
-func TestHome(t *testing.T) {
-  req, _ := http.NewRequest("GET", "/path/to/handler", nil)
-  resp := NewMockTestResponse(t)
-  HomeHandler(resp, req)
-  resp.AssertBody("HomeHandler")
-  resp.AssertCode(200)
 }
