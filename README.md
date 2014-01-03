@@ -20,4 +20,15 @@ func TestHome(t *testing.T) {
 }
 ```
 
+The interesting functions are:
+
+### AssertCode
+This simple failes the test if the code does not match the one passed in
+
+### AssertBody
+If the string that is passed in doesn't match then fail the test.
+
+#### Bytes()
+Comparing bytes can be achieved by calling resp.Bytes().
+
 
