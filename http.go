@@ -6,20 +6,24 @@ import (
   "testing"
 )
 
+// MockResponse [...] Create a mock http response implementaiton
 type MockResponse struct {
   bytes.Buffer
   Head       http.Header
   StatusCode int
 }
 
+// Header ...  Returns the header
 func (mr *MockResponse) Header() http.Header {
   return mr.Head
 }
 
+// WriteHeader ... Write a response code to the header
 func (mr *MockResponse) WriteHeader(code int) {
   mr.StatusCode = code
 }
 
+// MockTestResponse [...] Simple wrapper to save typing
 type MockTestResponse struct {
   MockResponse
   T *testing.T
@@ -51,6 +55,7 @@ func (mtr *MockTestResponse) AssertHeaders(t *testing.T, expectedHeaders map[str
   }
 }
 
+// NewMockTestResponse ... Create an instance of MockTestResponse
 func NewMockTestResponse(t *testing.T) *MockTestResponse {
-  return &MockTestResponse{MockResponse: MockResponse{Buffer: *bytes.NewBufferString(""), Head: http.Header{}, StatusCode: 200}, T: t}
+  return &MockTestResponse{MockResponse: MockResponse{Buffer: *bytes.NewBuffer(make([]byte, 0)), Head: http.Header{}, StatusCode: 200}, T: t}
 }

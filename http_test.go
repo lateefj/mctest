@@ -10,10 +10,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "HomeHandler")
 }
 
-func ByteHomeHandler(w http.ResponseWriter, r *http.Request) {
-  w.Write([]byte("HomeHandler"))
-}
-
 func TestHome(t *testing.T) {
   req, _ := http.NewRequest("GET", "/path/to/handler", nil)
   resp := NewMockTestResponse(t)
@@ -22,6 +18,10 @@ func TestHome(t *testing.T) {
   resp.AssertCode(200)
 }
 
+// TODO: Write some more complex bytes
+func ByteHomeHandler(w http.ResponseWriter, r *http.Request) {
+  w.Write([]byte("HomeHandler"))
+}
 func TestByteHome(t *testing.T) {
   req, _ := http.NewRequest("GET", "/path/to/handler", nil)
   resp := NewMockTestResponse(t)
