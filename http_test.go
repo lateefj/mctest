@@ -22,7 +22,7 @@ func TestInit(t *testing.T) {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-  w.WriteHeader(200)
+  w.WriteHeader(http.StatusOK)
   fmt.Fprintf(w, "HomeHandler")
 }
 
@@ -31,8 +31,8 @@ func TestHome(t *testing.T) {
   resp := NewMockTestResponse(t)
   HomeHandler(resp, req)
   b := "HomeHandler"
-  if !resp.AssertCode(200) {
-    t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, 200)
+  if !resp.AssertCode(http.StatusOK) {
+    t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, http.StatusOK)
   }
   if !resp.AssertBody(b) {
     t.Fatalf("Response body is %s asserted that it is %s", resp.String(), b)
