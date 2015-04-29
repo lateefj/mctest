@@ -34,12 +34,12 @@ func TestHome(t *testing.T) {
 ```go
 
 type payload struct {
-  X string
-  Y string
+  X string `json:"x"`
+  Y string `json:"y"`
 }
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(200)
-  fmt.Fprintf(w, "{\"X\":\"bar\", \"Y\":\"foo\"}")
+  fmt.Fprintf(w, "{\"x\":\"bar\", \"y\":\"foo\"}")
 }
 
 func TestHome(t *testing.T) {
@@ -69,7 +69,7 @@ If the string that is passed in doesn't match then fail the test.
 #### Bytes()
 Comparing bytes can be achieved by calling resp.Bytes().
 
-#### AssertJson(structInstance, epectedMatchStruct)
+#### AssertJson(structInstance, expectedMatchStruct)
 By passing a struct this will validate that the response json has the same values
 
 
