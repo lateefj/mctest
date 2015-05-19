@@ -32,12 +32,13 @@ Comparing bytes can be achieved by calling resp.Bytes().
 ### Basic
 
 ```go
-
+// Application code example
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
   fmt.Fprintf(w, "HomeHandler")
 }
 
+// Testing application code
 func TestHome(t *testing.T) {
   req, _ := http.NewRequest("GET", "/path/to/handler", nil)
   resp := NewMockTestResponse(t)
@@ -55,14 +56,18 @@ func TestHome(t *testing.T) {
 ### Json
 
 ```go
+
+// JSON Stuct
 type payload struct {
   X string `json:"x"`
   Y string `json:"y"`
 }
+// JSON API
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
   fmt.Fprintf(w, "{\"x\":\"bar\", \"y\":\"foo\"}")
 }
+// Test JSON API
 func TestHome(t *testing.T) {
   req, _ := http.NewRequest("GET", "/path/to/handler", nil)
   resp := NewMockTestResponse(t)
@@ -82,6 +87,7 @@ func TestHome(t *testing.T) {
 ### Middleware
 
 ```go
+// App authentication wrapper
 func testAuthWrapper(fn http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		a, err := r.Cookie(authCookieName)
@@ -93,12 +99,15 @@ func testAuthWrapper(fn http.HandlerFunc) http.HandlerFunc {
 		}
 	}
 }
+// Handler code
 func testAuthHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("TestAuthHandler"))
 }
+// Actual test code
 func TestAuthMiddleware(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/path/to/handler", nil)
+  // Create mock
 	resp := NewMockTestResponse(t)
 	testAuthWrapper(testAuthHandler)(resp, req)
 	if !resp.AssertCode(http.StatusUnauthorized) {
@@ -108,6 +117,7 @@ func TestAuthMiddleware(t *testing.T) {
 		t.Fatalf("Response body is %s asserted that it is %s", resp.String(), failedAuth)
 	}
 	b := "TestAuthHandler"
+  // Add auth cookie
 	req.AddCookie(authCookie)
 	resp = NewMockTestResponse(t)
 	// Run the code again
@@ -119,7 +129,6 @@ func TestAuthMiddleware(t *testing.T) {
 		t.Fatalf("Response body is %s asserted that it is %s", resp.String(), b)
 	}
 }
-
 ```
 
 Check the http_test.go for more examples on how to use the api.
