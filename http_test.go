@@ -7,6 +7,13 @@ import (
 	"testing"
 )
 
+var (
+	failedAuth      = "Failed to authenticate"
+	authCookieName  = "auth_cookie"
+	authCookieValue = "TEST_AUTH"
+	authCookie      = &http.Cookie{Name: authCookieName, Value: authCookieValue}
+)
+
 func TestInit(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/path/to/handler", nil)
 	resp := NewMockTestResponse(t)
@@ -42,7 +49,7 @@ func TestHome(t *testing.T) {
 
 // TODO: Write some more complex bytes
 func ByteHomeHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("HomeHandler"))
 }
 func TestByteHome(t *testing.T) {
@@ -53,8 +60,8 @@ func TestByteHome(t *testing.T) {
 	if string(resp.Bytes()) != "HomeHandler" {
 		t.Fatalf("Expected bytes to equal HomeHandler but failed actual is '%s'", string(resp.Bytes()))
 	}
-	if !resp.AssertCode(200) {
-		t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, 200)
+	if !resp.AssertCode(http.StatusOK) {
+		t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, http.StatusOK)
 	}
 	if !resp.AssertBody(b) {
 		t.Fatalf("Response body is %s asserted that it is %s", resp.String(), b)
@@ -88,6 +95,50 @@ func TestJsonAssert(t *testing.T) {
 	// Should fail
 	if resp.AssertJson(&Payload{}, &Payload{X: "boo", Y: "bar"}) {
 		t.Fatalf("Payload does not match!")
+	}
+}
+
+func testAuthWrapper(fn http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a, err := r.Cookie(authCookieName)
+		if err != nil || a == nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte(failedAuth))
+		} else {
+			fn(w, r)
+		}
+	}
+}
+
+func testAuthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("TestAuthHandler"))
+}
+
+// This validates that auth middleware does the right thing
+func TestAuthMiddleware(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/path/to/handler", nil)
+	resp := NewMockTestResponse(t)
+	testAuthWrapper(testAuthHandler)(resp, req)
+	if !resp.AssertCode(http.StatusUnauthorized) {
+		t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, http.StatusUnauthorized)
+
+	}
+
+	if !resp.AssertBody(failedAuth) {
+		t.Fatalf("Response body is %s asserted that it is %s", resp.String(), failedAuth)
+	}
+
+	b := "TestAuthHandler"
+	req.AddCookie(authCookie)
+	resp = NewMockTestResponse(t)
+	// Run the code again
+	testAuthWrapper(testAuthHandler)(resp, req)
+	if !resp.AssertCode(http.StatusOK) {
+		t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, http.StatusOK)
+	}
+	if !resp.AssertBody(b) {
+		t.Fatalf("Response body is %s asserted that it is %s", resp.String(), b)
 	}
 
 }
