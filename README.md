@@ -1,4 +1,9 @@
-# McTest
+# McTest (MockTest)
+
+![Northern Mockingbird](http://www.biokids.umich.edu/collections/contributors/grzimek_birds/Mimidae/Mimus_polyglottos/medium.jpg)
+
+[Image Source](http://www.biokids.umich.edu/critters/Mimus_polyglottos/pictures/resources/contributors/grzimek_birds/Mimidae/Mimus_polyglottos/)
+
 
 McTest is a Go (golang) web test library. Initally started as a gist and is slowly getting used more for testing webservices written in Go. 
 
