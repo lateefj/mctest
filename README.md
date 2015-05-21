@@ -7,6 +7,8 @@
 
 McTest is a Go (golang) web test library. Initally started as a gist and is slowly getting used more for testing webservices written in Go. 
 
+[![Build Status](https://travis-ci.org/lateefj/mctest.svg?branch=master)](https://travis-ci.org/lateefj/mctest)
+
 ## Goals
 
  * Simple quick way to test Middleware (wrappers around http handler)
