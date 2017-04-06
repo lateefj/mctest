@@ -84,7 +84,7 @@ func TestHome(t *testing.T) {
   if !resp.AssertCode(http.StatusOK) {
     t.Fatalf("Response StatusCode is %d asserted that it is %d", resp.StatusCode, http.StatusOK)
   }
-  p := payload{X: "bar", Y: "foo"}
+  p := &payload{X: "bar", Y: "foo"}
   inst := &payload{}
   if !resp.AssertJson(inst, p) {
     t.Fatalf("Response body is %s asserted that it is %v", resp.String(), p)
